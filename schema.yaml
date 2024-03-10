@@ -1,0 +1,17 @@
+COLUMNS:
+  Car_Name: object
+  Year: int64
+  present_Price: float64
+  Kms_Driven: int64
+  Fuel_Type: float64
+  Seller_Type: object
+  Transmission: object
+  Owner: int64
+  
+
+
+TARGET_COLUMN:
+  name: Selling_Price
+
+
+ 
