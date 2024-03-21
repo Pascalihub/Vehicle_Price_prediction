@@ -25,7 +25,7 @@ class DataTransformation:
         final_dataset['Current Year'] = 2020
         final_dataset['no_year'] = final_dataset['Current Year'] - final_dataset['Year']
         final_dataset.drop(['Year'], axis=1, inplace=True)
-        final_dataset.drop(['Current Year'], axis=1, inplace=True)  # Corrected inplace parameter
+        final_dataset.drop(['Current Year', 'Car_Name'], axis=1, inplace=True)  # Corrected inplace parameter
 
     def get_data_transformer_obj(self):
         '''
@@ -33,17 +33,17 @@ class DataTransformation:
         '''
         try:
             # Define which columns should be ordinal-encoded and which should be scaled
-            numerical_columns=['Present_Price', 'Kms_Driven', 'Owner', 'no_year']
-            categorical_columns=['Fuel_Type', 'Seller_Type', 'Transmission']
-            
+            numerical_columns = ['Present_Price', 'Kms_Driven', 'Owner', 'no_year']
+            categorical_columns = ['Fuel_Type', 'Seller_Type', 'Transmission']
+
             # Define the custom ranking for each ordinal variable
-            Fuel_Type = ['Petrol' ,'Diesel', 'CNG']
-            Seller_Type = ['Dealer' ,'Individual']
+            Fuel_Type = ['Petrol', 'Diesel', 'CNG']
+            Seller_Type = ['Dealer', 'Individual']
             Transmission = ['Manual', 'Automatic']
 
             # Numerical Pipeline
             num_pipeline = Pipeline(
-                steps = [
+                steps=[
                     ('imputer', SimpleImputer(strategy='median')),
                     ('scaler', StandardScaler())
                 ]
@@ -67,32 +67,29 @@ class DataTransformation:
                     ('cat_pipeline', cat_pipeline, categorical_columns)
                 ]
             )
-            
+
             return preprocessor
 
         except Exception as e:
-            logging.error(f"Error in get_data_transformer_object: {str(e)}")
+            logging.error(f"Error in get_data_transformer_obj: {str(e)}")
 
     def initiate_data_transformation(self):
         try:
+            # data = 'artifacts/data_ingestion/car data.csv'
             data = pd.read_csv(self.config.data_path)
 
             # Parse present year before splitting data
             self.parse_present_year(data)
 
             # Split the data into training and test sets. (0.75, 0.25) split.
-            train, test = train_test_split(data)
+            train, test = train_test_split(data, test_size=0.25, random_state=42)
 
-            train.to_csv(os.path.join(self.config.root_dir, "train.csv"), index=False)
-            test.to_csv(os.path.join(self.config.root_dir, "test.csv"), index=False)
+            logging.info('Obtaining preprocessing object')
+            preprocessing_obj = self.get_data_transformer_obj()
 
             logging.info("Split data into training and test sets")
             logging.info(train.shape)
             logging.info(test.shape)
-
-            logging.info('Obtaining preprocessing object')
-
-            preprocessing_obj = self.get_data_transformer_obj()
 
             target_column_name = 'Selling_Price'
 
@@ -111,6 +108,14 @@ class DataTransformation:
             train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]
             test_arr = np.c_[input_feature_test_arr, np.array(target_feature_test_df)]
 
+            # Convert NumPy arrays to DataFrames
+            train_df = pd.DataFrame(train_arr, columns=list(input_feature_train_df.columns) + [target_column_name])
+            test_df = pd.DataFrame(test_arr, columns=list(input_feature_test_df.columns) + [target_column_name])
+
+            # Save train and test data to CSV
+            train_df.to_csv(os.path.join(self.config.root_dir, "train.csv"), index=False)
+            test_df.to_csv(os.path.join(self.config.root_dir, "test.csv"), index=False)
+
             # Save preprocessing object
             preprocessing_obj_file = os.path.join("artifacts", 'data_transformation', 'preprocessing_obj.pkl')
             with open(preprocessing_obj_file, 'wb') as file:
@@ -125,4 +130,5 @@ class DataTransformation:
             logging.error(f"Error in initiate_data_transformation: {str(e)}")
             # Raise the exception so it can be caught in the calling code
             raise e
+
 

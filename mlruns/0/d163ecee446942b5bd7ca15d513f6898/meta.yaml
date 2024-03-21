@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/msi/Desktop/Pascal%20DS%20project/Vehicle_Price_prediction/mlruns/0/d163ecee446942b5bd7ca15d513f6898/artifacts
+end_time: 1710984199767
+entry_point_name: ''
+experiment_id: '0'
+lifecycle_stage: active
+run_id: d163ecee446942b5bd7ca15d513f6898
+run_name: grandiose-ray-516
+run_uuid: d163ecee446942b5bd7ca15d513f6898
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1710984195493
+status: 3
+tags: []
+user_id: msi

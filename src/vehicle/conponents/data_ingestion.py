@@ -8,10 +8,13 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from vehicle.logger import logging
 from sklearn.model_selection import train_test_split
+from src.vehicle.entity import DataIngestionConfig
 import pandas as pd
 # import requests
 import urllib
 import sys
+from dataclasses import dataclass
+from pathlib import Path
 
 
 

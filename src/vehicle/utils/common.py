@@ -20,6 +20,21 @@ from box import ConfigBox
 from pathlib import Path
 from typing import Any
 
+import os
+from box.exceptions import BoxValueError
+import yaml
+import json
+import joblib
+from ensure import ensure_annotations
+from box import ConfigBox
+from src.vehicle.logger import logging
+from pathlib import Path
+from typing import Any
+import dill
+import numpy as np
+from sklearn.metrics import r2_score
+from sklearn.metrics import r2_score, mean_absolute_error, mean_squared_error
+
 
 @ensure_annotations
 def read_yaml(path_to_yaml: Path) -> ConfigBox:
@@ -123,6 +138,19 @@ def model_metrics(true, predicted):
     except Exception as e:
         logging.info('Exception Occured while evaluating metric')
         raise e
+    
+@ensure_annotations
+def save_json(path: Path, data: dict):
+    """save json data
+
+    Args:
+        path (Path): path to json file
+        data (dict): data to be saved in json file
+    """
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
+
+    logging.info(f"json file saved at: {path}")
     
 
 def print_evaluated_results(xtrain,ytrain,xtest,ytest,model):
