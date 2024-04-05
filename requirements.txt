@@ -13,4 +13,19 @@ Dill
 flask
 flask_cors
 lime
+chardet==3.0.4
+click==7.1.2
+idna
+itsdangerous
+Jinja2
+joblib
+jsonify
+MarkupSafe
+requests
+scipy
+threadpoolctl
+urllib3
+Werkzeug
+wincertstore
+gunicorn
 -e .

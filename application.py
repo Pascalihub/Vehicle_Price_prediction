@@ -17,7 +17,7 @@ model = pickle.load(open('random_forest_regression_model.pkl', 'rb'))
 
 @app.route('/', methods=['GET'])
 def Home():
-    return render_template('index.html')
+    return render_template('home.html')
 
 @app.route("/predict", methods=['POST'])
 def predict():
@@ -31,7 +31,6 @@ def predict():
         Transmission_Mannual = 1 if request.form['Transmission'] == 'Mannual' else 0
 
         custom_data = CustomData(
-            Car_Name='dummy',
             Year=Year,
             Selling_Price=0,  # Dummy value
             Present_Price=Present_Price,
